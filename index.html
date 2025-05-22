@@ -1,0 +1,1312 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>涛涛的饮品记录本</title>
+<style>
+/* --- Loading 层样式 --- */
+#loading-screen {
+  position: fixed;
+  z-index: 9999;
+  top:0; left:0; width:100%; height:100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+#loading-text {
+  z-index: 10;
+  margin-top: 20px;
+  letter-spacing: 0.2em;
+}
+/* 星星粒子容器 */
+#stars-container {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  overflow: hidden;
+  z-index: 1;
+}
+/* 星星样式 */
+.star-particle {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 4px white);
+  animation-timing-function: linear;
+}
+
+/* 碎星星掉落容器 */
+#falling-stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10000;
+}
+
+/* 掉落的星星 */
+.falling-star {
+  position: absolute;
+  color: #FFD700;
+  font-size: 18px;
+  user-select: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 3px #FFD700);
+  animation-name: fallStar;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fallStar {
+  0% {
+    transform: translateY(-20px) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh) translateX(30px);
+    opacity: 0;
+  }
+}
+
+/* 主体页面初始化为隐藏 */
+#main-content {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+/* --- 主页面样式 --- */
+.title {
+  font-size: 36px;
+  text-align: center;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff00cc, #3333ff, #00ffee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s ease-in-out infinite alternate, fadeIn 1s ease-out forwards;
+  opacity: 0;
+  margin-bottom: 30px;
+}
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #ff00cc, 0 0 15px #ff00cc;
+  }
+  to {
+    text-shadow: 0 0 10px #fff, 0 0 20px #00ffee, 0 0 30px #00ffee;
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  padding: 20px;
+  margin:0;
+}
+h2 {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
+  width: 250px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  background: #fff;
+  display: inline-block;
+  vertical-align: top;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+}
+.star {
+  font-size: 20px;
+  color: #FFD700;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.star.empty {
+  color: #ccc;
+}
+.star:hover {
+  transform: scale(1.2);
+}
+.my-rating {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #333;
+}
+</style>
+</head>
+<body>
+
+<!-- 碎星星掉落容器 -->
+<div id="falling-stars-container"></div>
+
+<!-- 加载层 -->
+<div id="loading-screen">
+  <div id="stars-container"></div>
+  <div id="loading-text">Loading ✨</div>
+</div>
+
+<!-- 主体内容 -->
+<div id="main-content" style="display:none;">
+  <h1 class="title">🥤 涛涛的饮品记录本 · TAO's DRINK DIARY 🧋</h1>
+  <p style="text-align:center; font-size:16px; color:#666; margin-bottom: 40px;">
+    记录每一次小确幸，从第一口开始。
+  </p>
+<h2>2024-01</h2>
+
+    <div class="card" id="card-0">
+        <h4>01-01-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="0" data-rating="1">☆</span><span class="star empty" data-card="0" data-rating="2">☆</span><span class="star empty" data-card="0" data-rating="3">☆</span><span class="star empty" data-card="0" data-rating="4">☆</span><span class="star empty" data-card="0" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-0">我的评分：0 星</div>
+        <p><b>评价:</b> 奶味茶味很平衡，很香</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-1">
+        <h4>02-01-2024</h4>
+        <p><b>品牌:</b> 沏茗城</p>
+        <p><b>商品:</b> 手捣鲜橙</p>
+        <p><b>评分:</b> <span class="star empty" data-card="1" data-rating="1">☆</span><span class="star empty" data-card="1" data-rating="2">☆</span><span class="star empty" data-card="1" data-rating="3">☆</span><span class="star empty" data-card="1" data-rating="4">☆</span><span class="star empty" data-card="1" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-1">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-2">
+        <h4>03-01-2024</h4>
+        <p><b>品牌:</b> 星巴克</p>
+        <p><b>商品:</b> 金烘香草巴旦木拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="2" data-rating="1">☆</span><span class="star empty" data-card="2" data-rating="2">☆</span><span class="star empty" data-card="2" data-rating="3">☆</span><span class="star empty" data-card="2" data-rating="4">☆</span><span class="star empty" data-card="2" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-2">我的评分：0 星</div>
+        <p><b>评价:</b> 39rmb，超大杯，偏甜，但是能喝到咖啡豆被烘培的风味，很特别</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-3">
+        <h4>06-01-2024</h4>
+        <p><b>品牌:</b> BOOST</p>
+        <p><b>商品:</b> Strawberry Squeeze</p>
+        <p><b>评分:</b> <span class="star empty" data-card="3" data-rating="1">☆</span><span class="star empty" data-card="3" data-rating="2">☆</span><span class="star empty" data-card="3" data-rating="3">☆</span><span class="star empty" data-card="3" data-rating="4">☆</span><span class="star empty" data-card="3" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-3">我的评分：0 星</div>
+        <p><b>评价:</b> 偏甜，有很浓的香蕉味，不喜欢</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-4">
+        <h4>13-01-2024</h4>
+        <p><b>品牌:</b> TEALIVE</p>
+        <p><b>商品:</b> Hazalnut Milk Tea</p>
+        <p><b>评分:</b> <span class="star empty" data-card="4" data-rating="1">☆</span><span class="star empty" data-card="4" data-rating="2">☆</span><span class="star empty" data-card="4" data-rating="3">☆</span><span class="star empty" data-card="4" data-rating="4">☆</span><span class="star empty" data-card="4" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-4">我的评分：0 星</div>
+        <p><b>评价:</b> Roasted milk tea更好喝</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-5">
+        <h4>30-01-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 花田乌龙</p>
+        <p><b>评分:</b> <span class="star empty" data-card="5" data-rating="1">☆</span><span class="star empty" data-card="5" data-rating="2">☆</span><span class="star empty" data-card="5" data-rating="3">☆</span><span class="star empty" data-card="5" data-rating="4">☆</span><span class="star empty" data-card="5" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-5">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-02</h2>
+
+    <div class="card" id="card-12">
+        <h4>05-02-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 柠檬绿茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="12" data-rating="1">☆</span><span class="star empty" data-card="12" data-rating="2">☆</span><span class="star empty" data-card="12" data-rating="3">☆</span><span class="star empty" data-card="12" data-rating="4">☆</span><span class="star empty" data-card="12" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-12">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-13">
+        <h4>20-02-2024</h4>
+        <p><b>品牌:</b> 全家</p>
+        <p><b>商品:</b> Brown Sugar Bubble Milk Tea</p>
+        <p><b>评分:</b> <span class="star empty" data-card="13" data-rating="1">☆</span><span class="star empty" data-card="13" data-rating="2">☆</span><span class="star empty" data-card="13" data-rating="3">☆</span><span class="star empty" data-card="13" data-rating="4">☆</span><span class="star empty" data-card="13" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-13">我的评分：0 星</div>
+        <p><b>评价:</b> 太甜了，还是牛奶的好喝</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-14">
+        <h4>22-02-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 伯牙绝弦</p>
+        <p><b>评分:</b> <span class="star empty" data-card="14" data-rating="1">☆</span><span class="star empty" data-card="14" data-rating="2">☆</span><span class="star empty" data-card="14" data-rating="3">☆</span><span class="star empty" data-card="14" data-rating="4">☆</span><span class="star empty" data-card="14" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-14">我的评分：0 星</div>
+        <p><b>评价:</b> yyds</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-15">
+        <h4>26-02-2024</h4>
+        <p><b>品牌:</b> ZUS COFFEE</p>
+        <p><b>商品:</b> 生椰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="15" data-rating="1">☆</span><span class="star empty" data-card="15" data-rating="2">☆</span><span class="star empty" data-card="15" data-rating="3">☆</span><span class="star empty" data-card="15" data-rating="4">☆</span><span class="star empty" data-card="15" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-15">我的评分：0 星</div>
+        <p><b>评价:</b> spanish latte比较好喝</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-03</h2>
+
+    <div class="card" id="card-20">
+        <h4>01-03-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="20" data-rating="1">☆</span><span class="star empty" data-card="20" data-rating="2">☆</span><span class="star empty" data-card="20" data-rating="3">☆</span><span class="star empty" data-card="20" data-rating="4">☆</span><span class="star empty" data-card="20" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-20">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-21">
+        <h4>03-03-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 铁观音奶冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="21" data-rating="1">☆</span><span class="star empty" data-card="21" data-rating="2">☆</span><span class="star empty" data-card="21" data-rating="3">☆</span><span class="star empty" data-card="21" data-rating="4">☆</span><span class="star empty" data-card="21" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-21">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-22">
+        <h4>06-03-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 珍珠奶茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="22" data-rating="1">☆</span><span class="star empty" data-card="22" data-rating="2">☆</span><span class="star empty" data-card="22" data-rating="3">☆</span><span class="star empty" data-card="22" data-rating="4">☆</span><span class="star empty" data-card="22" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-22">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-23">
+        <h4>09-03-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 白雾红尘</p>
+        <p><b>评分:</b> <span class="star empty" data-card="23" data-rating="1">☆</span><span class="star empty" data-card="23" data-rating="2">☆</span><span class="star empty" data-card="23" data-rating="3">☆</span><span class="star empty" data-card="23" data-rating="4">☆</span><span class="star empty" data-card="23" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-23">我的评分：0 星</div>
+        <p><b>评价:</b> 伯牙绝弦比较好喝</p>
+        <p><b>含糖量:</b> 微糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-24">
+        <h4>11-03-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 丝绒拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="24" data-rating="1">☆</span><span class="star empty" data-card="24" data-rating="2">☆</span><span class="star empty" data-card="24" data-rating="3">☆</span><span class="star empty" data-card="24" data-rating="4">☆</span><span class="star empty" data-card="24" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-24">我的评分：0 星</div>
+        <p><b>评价:</b> 典型的咖啡，没特色</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-25">
+        <h4>17-03-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 豆乳米麻薯</p>
+        <p><b>评分:</b> <span class="star empty" data-card="25" data-rating="1">☆</span><span class="star empty" data-card="25" data-rating="2">☆</span><span class="star empty" data-card="25" data-rating="3">☆</span><span class="star empty" data-card="25" data-rating="4">☆</span><span class="star empty" data-card="25" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-25">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-26">
+        <h4>18-03-2024</h4>
+        <p><b>品牌:</b> COCO都可</p>
+        <p><b>商品:</b> 茉香奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="26" data-rating="1">☆</span><span class="star empty" data-card="26" data-rating="2">☆</span><span class="star empty" data-card="26" data-rating="3">☆</span><span class="star empty" data-card="26" data-rating="4">☆</span><span class="star empty" data-card="26" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-26">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-27">
+        <h4>20-03-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="27" data-rating="1">☆</span><span class="star empty" data-card="27" data-rating="2">☆</span><span class="star empty" data-card="27" data-rating="3">☆</span><span class="star empty" data-card="27" data-rating="4">☆</span><span class="star empty" data-card="27" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-27">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-28">
+        <h4>24-03-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 黄山毛峰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="28" data-rating="1">☆</span><span class="star empty" data-card="28" data-rating="2">☆</span><span class="star empty" data-card="28" data-rating="3">☆</span><span class="star empty" data-card="28" data-rating="4">☆</span><span class="star empty" data-card="28" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-28">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-29">
+        <h4>30-03-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 豆乳米麻薯</p>
+        <p><b>评分:</b> <span class="star empty" data-card="29" data-rating="1">☆</span><span class="star empty" data-card="29" data-rating="2">☆</span><span class="star empty" data-card="29" data-rating="3">☆</span><span class="star empty" data-card="29" data-rating="4">☆</span><span class="star empty" data-card="29" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-29">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    <hr/><h2>2024-04</h2>
+
+    <div class="card" id="card-40">
+        <h4>02-04-2024</h4>
+        <p><b>品牌:</b>  马伍旺饮料厂 </p>
+        <p><b>商品:</b>  素颜观音 </p>
+        <p><b>评分:</b> <span class="star empty" data-card="40" data-rating="1">☆</span><span class="star empty" data-card="40" data-rating="2">☆</span><span class="star empty" data-card="40" data-rating="3">☆</span><span class="star empty" data-card="40" data-rating="4">☆</span><span class="star empty" data-card="40" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-40">我的评分：0 星</div>
+        <p><b>评价:</b> 味道和霸王茶姬一样</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-41">
+        <h4>06-04-2024</h4>
+        <p><b>品牌:</b> 沏茗城</p>
+        <p><b>商品:</b> 莓莓鲜榨</p>
+        <p><b>评分:</b> <span class="star empty" data-card="41" data-rating="1">☆</span><span class="star empty" data-card="41" data-rating="2">☆</span><span class="star empty" data-card="41" data-rating="3">☆</span><span class="star empty" data-card="41" data-rating="4">☆</span><span class="star empty" data-card="41" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-41">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 微糖 </p>
+        <p><b>温度:</b> 冰沙 </p>
+    </div>
+    
+    <div class="card" id="card-42">
+        <h4>10-04-2024</h4>
+        <p><b>品牌:</b> 庙口红茶</p>
+        <p><b>商品:</b> 魔法柠檬汁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="42" data-rating="1">☆</span><span class="star empty" data-card="42" data-rating="2">☆</span><span class="star empty" data-card="42" data-rating="3">☆</span><span class="star empty" data-card="42" data-rating="4">☆</span><span class="star empty" data-card="42" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-42">我的评分：0 星</div>
+        <p><b>评价:</b> 后颈有奶味</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-43">
+        <h4>14-04-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 椰皇拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="43" data-rating="1">☆</span><span class="star empty" data-card="43" data-rating="2">☆</span><span class="star empty" data-card="43" data-rating="3">☆</span><span class="star empty" data-card="43" data-rating="4">☆</span><span class="star empty" data-card="43" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-43">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 8颗冰 </p>
+    </div>
+    
+    <div class="card" id="card-44">
+        <h4>16-04-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 冰鲜柠檬水</p>
+        <p><b>评分:</b> <span class="star empty" data-card="44" data-rating="1">☆</span><span class="star empty" data-card="44" data-rating="2">☆</span><span class="star empty" data-card="44" data-rating="3">☆</span><span class="star empty" data-card="44" data-rating="4">☆</span><span class="star empty" data-card="44" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-44">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-45">
+        <h4>19-04-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 豆乳米麻薯</p>
+        <p><b>评分:</b> <span class="star empty" data-card="45" data-rating="1">☆</span><span class="star empty" data-card="45" data-rating="2">☆</span><span class="star empty" data-card="45" data-rating="3">☆</span><span class="star empty" data-card="45" data-rating="4">☆</span><span class="star empty" data-card="45" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-45">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-46">
+        <h4>21-04-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 冰吸生椰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="46" data-rating="1">☆</span><span class="star empty" data-card="46" data-rating="2">☆</span><span class="star empty" data-card="46" data-rating="3">☆</span><span class="star empty" data-card="46" data-rating="4">☆</span><span class="star empty" data-card="46" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-46">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-47">
+        <h4>22-04-2024</h4>
+        <p><b>品牌:</b> 一只酸奶牛</p>
+        <p><b>商品:</b> 紫米麻薯奶茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="47" data-rating="1">☆</span><span class="star empty" data-card="47" data-rating="2">☆</span><span class="star empty" data-card="47" data-rating="3">☆</span><span class="star empty" data-card="47" data-rating="4">☆</span><span class="star empty" data-card="47" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-47">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-48">
+        <h4>29-04-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 夏日青提拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="48" data-rating="1">☆</span><span class="star empty" data-card="48" data-rating="2">☆</span><span class="star empty" data-card="48" data-rating="3">☆</span><span class="star empty" data-card="48" data-rating="4">☆</span><span class="star empty" data-card="48" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-48">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-05</h2>
+
+    <div class="card" id="card-58">
+        <h4>10-05-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="58" data-rating="1">☆</span><span class="star empty" data-card="58" data-rating="2">☆</span><span class="star empty" data-card="58" data-rating="3">☆</span><span class="star empty" data-card="58" data-rating="4">☆</span><span class="star empty" data-card="58" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-58">我的评分：0 星</div>
+        <p><b>评价:</b> 太好喝啦</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-59">
+        <h4>12-05-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="59" data-rating="1">☆</span><span class="star empty" data-card="59" data-rating="2">☆</span><span class="star empty" data-card="59" data-rating="3">☆</span><span class="star empty" data-card="59" data-rating="4">☆</span><span class="star empty" data-card="59" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-59">我的评分：0 星</div>
+        <p><b>评价:</b> yyds，室友请的最好喝</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-60">
+        <h4>22-05-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 夏日青提拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="60" data-rating="1">☆</span><span class="star empty" data-card="60" data-rating="2">☆</span><span class="star empty" data-card="60" data-rating="3">☆</span><span class="star empty" data-card="60" data-rating="4">☆</span><span class="star empty" data-card="60" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-60">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-61">
+        <h4>29-05-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 燕麦拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="61" data-rating="1">☆</span><span class="star empty" data-card="61" data-rating="2">☆</span><span class="star empty" data-card="61" data-rating="3">☆</span><span class="star empty" data-card="61" data-rating="4">☆</span><span class="star empty" data-card="61" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-61">我的评分：0 星</div>
+        <p><b>评价:</b> 可以试试不加糖</p>
+        <p><b>含糖量:</b> 半糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-62">
+        <h4>31-05-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 香草拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="62" data-rating="1">☆</span><span class="star empty" data-card="62" data-rating="2">☆</span><span class="star empty" data-card="62" data-rating="3">☆</span><span class="star empty" data-card="62" data-rating="4">☆</span><span class="star empty" data-card="62" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-62">我的评分：0 星</div>
+        <p><b>评价:</b> 可能标准甜才有甜味</p>
+        <p><b>含糖量:</b> 少甜 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    <hr/><h2>2024-06</h2>
+
+    <div class="card" id="card-68">
+        <h4>03-06-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 黄金椰椰乌龙</p>
+        <p><b>评分:</b> <span class="star empty" data-card="68" data-rating="1">☆</span><span class="star empty" data-card="68" data-rating="2">☆</span><span class="star empty" data-card="68" data-rating="3">☆</span><span class="star empty" data-card="68" data-rating="4">☆</span><span class="star empty" data-card="68" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-68">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-69">
+        <h4>04-06-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 冰吸生椰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="69" data-rating="1">☆</span><span class="star empty" data-card="69" data-rating="2">☆</span><span class="star empty" data-card="69" data-rating="3">☆</span><span class="star empty" data-card="69" data-rating="4">☆</span><span class="star empty" data-card="69" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-69">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-70">
+        <h4>10-06-2024</h4>
+        <p><b>品牌:</b> 茶芭蕾</p>
+        <p><b>商品:</b> 抹茶芭蕾</p>
+        <p><b>评分:</b> <span class="star empty" data-card="70" data-rating="1">☆</span><span class="star empty" data-card="70" data-rating="2">☆</span><span class="star empty" data-card="70" data-rating="3">☆</span><span class="star empty" data-card="70" data-rating="4">☆</span><span class="star empty" data-card="70" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-70">我的评分：0 星</div>
+        <p><b>评价:</b> 来新疆第一次喝，没有logo图，不浓郁，一般般廉价的奶茶</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-71">
+        <h4>12-06-2024</h4>
+        <p><b>品牌:</b> 1点点</p>
+        <p><b>商品:</b> 薄荷奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="71" data-rating="1">☆</span><span class="star empty" data-card="71" data-rating="2">☆</span><span class="star empty" data-card="71" data-rating="3">☆</span><span class="star empty" data-card="71" data-rating="4">☆</span><span class="star empty" data-card="71" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-71">我的评分：0 星</div>
+        <p><b>评价:</b> 第一次喝，五分是很甜的</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-72">
+        <h4>13-06-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 香草丝绒拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="72" data-rating="1">☆</span><span class="star empty" data-card="72" data-rating="2">☆</span><span class="star empty" data-card="72" data-rating="3">☆</span><span class="star empty" data-card="72" data-rating="4">☆</span><span class="star empty" data-card="72" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-72">我的评分：0 星</div>
+        <p><b>评价:</b> 太甜了！以后要少少甜！！！</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-73">
+        <h4>15-06-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 伯牙绝弦</p>
+        <p><b>评分:</b> <span class="star empty" data-card="73" data-rating="1">☆</span><span class="star empty" data-card="73" data-rating="2">☆</span><span class="star empty" data-card="73" data-rating="3">☆</span><span class="star empty" data-card="73" data-rating="4">☆</span><span class="star empty" data-card="73" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-73">我的评分：0 星</div>
+        <p><b>评价:</b> 感觉缺点意思，下次试试半糖！</p>
+        <p><b>含糖量:</b> 微糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-74">
+        <h4>17-06-2024</h4>
+        <p><b>品牌:</b> 古茗</p>
+        <p><b>商品:</b> 云岭茉莉白</p>
+        <p><b>评分:</b> <span class="star empty" data-card="74" data-rating="1">☆</span><span class="star empty" data-card="74" data-rating="2">☆</span><span class="star empty" data-card="74" data-rating="3">☆</span><span class="star empty" data-card="74" data-rating="4">☆</span><span class="star empty" data-card="74" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-74">我的评分：0 星</div>
+        <p><b>评价:</b> 有点甜，但再少糖可能会淡，和霸王茶姬味道一样</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-75">
+        <h4>20-06-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 金丝小种</p>
+        <p><b>评分:</b> <span class="star empty" data-card="75" data-rating="1">☆</span><span class="star empty" data-card="75" data-rating="2">☆</span><span class="star empty" data-card="75" data-rating="3">☆</span><span class="star empty" data-card="75" data-rating="4">☆</span><span class="star empty" data-card="75" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-75">我的评分：0 星</div>
+        <p><b>评价:</b> 喝不出什么味道，但白雾红尘少糖好喝</p>
+        <p><b>含糖量:</b> 少糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-76">
+        <h4>23-06-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 冰吸生椰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="76" data-rating="1">☆</span><span class="star empty" data-card="76" data-rating="2">☆</span><span class="star empty" data-card="76" data-rating="3">☆</span><span class="star empty" data-card="76" data-rating="4">☆</span><span class="star empty" data-card="76" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-76">我的评分：0 星</div>
+        <p><b>评价:</b> yyds</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-77">
+        <h4>29-06-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 丝绒拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="77" data-rating="1">☆</span><span class="star empty" data-card="77" data-rating="2">☆</span><span class="star empty" data-card="77" data-rating="3">☆</span><span class="star empty" data-card="77" data-rating="4">☆</span><span class="star empty" data-card="77" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-77">我的评分：0 星</div>
+        <p><b>评价:</b> 很好喝，但要在冰块融化前喝完更好</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-78">
+        <h4>30-06-2024</h4>
+        <p><b>品牌:</b> 7-ELEVEN</p>
+        <p><b>商品:</b> 榛果拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="78" data-rating="1">☆</span><span class="star empty" data-card="78" data-rating="2">☆</span><span class="star empty" data-card="78" data-rating="3">☆</span><span class="star empty" data-card="78" data-rating="4">☆</span><span class="star empty" data-card="78" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-78">我的评分：0 星</div>
+        <p><b>评价:</b> 不够浓郁，比较苦</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-07</h2>
+
+    <div class="card" id="card-90">
+        <h4>01-07-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 夏日青提拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="90" data-rating="1">☆</span><span class="star empty" data-card="90" data-rating="2">☆</span><span class="star empty" data-card="90" data-rating="3">☆</span><span class="star empty" data-card="90" data-rating="4">☆</span><span class="star empty" data-card="90" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-90">我的评分：0 星</div>
+        <p><b>评价:</b> 要喝就喝标准甜，或者不喝，少甜太苦了</p>
+        <p><b>含糖量:</b> 少甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-91">
+        <h4>06-07-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 丝绒拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="91" data-rating="1">☆</span><span class="star empty" data-card="91" data-rating="2">☆</span><span class="star empty" data-card="91" data-rating="3">☆</span><span class="star empty" data-card="91" data-rating="4">☆</span><span class="star empty" data-card="91" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-91">我的评分：0 星</div>
+        <p><b>评价:</b> 要少冰</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-92">
+        <h4>09-07-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 青提茉莉</p>
+        <p><b>评分:</b> <span class="star empty" data-card="92" data-rating="1">☆</span><span class="star empty" data-card="92" data-rating="2">☆</span><span class="star empty" data-card="92" data-rating="3">☆</span><span class="star empty" data-card="92" data-rating="4">☆</span><span class="star empty" data-card="92" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-92">我的评分：0 星</div>
+        <p><b>评价:</b> 能做成冰沙就更好了</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    <hr/><h2>2024-08</h2>
+
+    <div class="card" id="card-96">
+        <h4>12-08-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 轻轻茉莉</p>
+        <p><b>评分:</b> <span class="star empty" data-card="96" data-rating="1">☆</span><span class="star empty" data-card="96" data-rating="2">☆</span><span class="star empty" data-card="96" data-rating="3">☆</span><span class="star empty" data-card="96" data-rating="4">☆</span><span class="star empty" data-card="96" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-96">我的评分：0 星</div>
+        <p><b>评价:</b> 很淡很水的奶茶，踩雷了</p>
+        <p><b>含糖量:</b> 少甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-97">
+        <h4>14-08-2024</h4>
+        <p><b>品牌:</b> 星巴克</p>
+        <p><b>商品:</b> 金烘香草巴旦木拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="97" data-rating="1">☆</span><span class="star empty" data-card="97" data-rating="2">☆</span><span class="star empty" data-card="97" data-rating="3">☆</span><span class="star empty" data-card="97" data-rating="4">☆</span><span class="star empty" data-card="97" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-97">我的评分：0 星</div>
+        <p><b>评价:</b> yule请客，瑞性价比更高</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-98">
+        <h4>17-08-2024</h4>
+        <p><b>品牌:</b>  马伍旺饮料厂 </p>
+        <p><b>商品:</b>  雪顶观音 </p>
+        <p><b>评分:</b> <span class="star empty" data-card="98" data-rating="1">☆</span><span class="star empty" data-card="98" data-rating="2">☆</span><span class="star empty" data-card="98" data-rating="3">☆</span><span class="star empty" data-card="98" data-rating="4">☆</span><span class="star empty" data-card="98" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-98">我的评分：0 星</div>
+        <p><b>评价:</b> 甜度刚刚好，不错的</p>
+        <p><b>含糖量:</b> 七分甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-99">
+        <h4>18-08-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 伯牙绝弦</p>
+        <p><b>评分:</b> <span class="star empty" data-card="99" data-rating="1">☆</span><span class="star empty" data-card="99" data-rating="2">☆</span><span class="star empty" data-card="99" data-rating="3">☆</span><span class="star empty" data-card="99" data-rating="4">☆</span><span class="star empty" data-card="99" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-99">我的评分：0 星</div>
+        <p><b>评价:</b> 金虎请客</p>
+        <p><b>含糖量:</b> 少甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-100">
+        <h4>21-08-2024</h4>
+        <p><b>品牌:</b> 哈姆特</p>
+        <p><b>商品:</b> 波霸奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="100" data-rating="1">☆</span><span class="star empty" data-card="100" data-rating="2">☆</span><span class="star empty" data-card="100" data-rating="3">☆</span><span class="star empty" data-card="100" data-rating="4">☆</span><span class="star empty" data-card="100" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-100">我的评分：0 星</div>
+        <p><b>评价:</b> 有绿豆粉的味道，超级好喝！</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-101">
+        <h4>23-08-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 冰吸生椰拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="101" data-rating="1">☆</span><span class="star empty" data-card="101" data-rating="2">☆</span><span class="star empty" data-card="101" data-rating="3">☆</span><span class="star empty" data-card="101" data-rating="4">☆</span><span class="star empty" data-card="101" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-101">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-102">
+        <h4>27-08-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 冰鲜柠檬水</p>
+        <p><b>评分:</b> <span class="star empty" data-card="102" data-rating="1">☆</span><span class="star empty" data-card="102" data-rating="2">☆</span><span class="star empty" data-card="102" data-rating="3">☆</span><span class="star empty" data-card="102" data-rating="4">☆</span><span class="star empty" data-card="102" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-102">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-103">
+        <h4>31-08-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 豆乳米麻薯</p>
+        <p><b>评分:</b> <span class="star empty" data-card="103" data-rating="1">☆</span><span class="star empty" data-card="103" data-rating="2">☆</span><span class="star empty" data-card="103" data-rating="3">☆</span><span class="star empty" data-card="103" data-rating="4">☆</span><span class="star empty" data-card="103" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-103">我的评分：0 星</div>
+        <p><b>评价:</b> 没得选不另外加糖，但是五分糖刚刚好</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    <hr/><h2>2024-09</h2>
+
+    <div class="card" id="card-112">
+        <h4>01-09-2024</h4>
+        <p><b>品牌:</b> 熊猫一间店</p>
+        <p><b>商品:</b> 奶油酥饼</p>
+        <p><b>评分:</b> <span class="star empty" data-card="112" data-rating="1">☆</span><span class="star empty" data-card="112" data-rating="2">☆</span><span class="star empty" data-card="112" data-rating="3">☆</span><span class="star empty" data-card="112" data-rating="4">☆</span><span class="star empty" data-card="112" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-112">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-113">
+        <h4>04-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="113" data-rating="1">☆</span><span class="star empty" data-card="113" data-rating="2">☆</span><span class="star empty" data-card="113" data-rating="3">☆</span><span class="star empty" data-card="113" data-rating="4">☆</span><span class="star empty" data-card="113" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-113">我的评分：0 星</div>
+        <p><b>评价:</b> 选择茉莉花茶好喝</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-114">
+        <h4>05-09-2024</h4>
+        <p><b>品牌:</b> MANNER</p>
+        <p><b>商品:</b> 清橙风味拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="114" data-rating="1">☆</span><span class="star empty" data-card="114" data-rating="2">☆</span><span class="star empty" data-card="114" data-rating="3">☆</span><span class="star empty" data-card="114" data-rating="4">☆</span><span class="star empty" data-card="114" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-114">我的评分：0 星</div>
+        <p><b>评价:</b> 橙要浸泡一下才出味道，性价比不高</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-115">
+        <h4>07-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 燕麦拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="115" data-rating="1">☆</span><span class="star empty" data-card="115" data-rating="2">☆</span><span class="star empty" data-card="115" data-rating="3">☆</span><span class="star empty" data-card="115" data-rating="4">☆</span><span class="star empty" data-card="115" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-115">我的评分：0 星</div>
+        <p><b>评价:</b> 一般般</p>
+        <p><b>含糖量:</b> 少少甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-116">
+        <h4>09-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="116" data-rating="1">☆</span><span class="star empty" data-card="116" data-rating="2">☆</span><span class="star empty" data-card="116" data-rating="3">☆</span><span class="star empty" data-card="116" data-rating="4">☆</span><span class="star empty" data-card="116" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-116">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-117">
+        <h4>15-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="117" data-rating="1">☆</span><span class="star empty" data-card="117" data-rating="2">☆</span><span class="star empty" data-card="117" data-rating="3">☆</span><span class="star empty" data-card="117" data-rating="4">☆</span><span class="star empty" data-card="117" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-117">我的评分：0 星</div>
+        <p><b>评价:</b> yyds</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-118">
+        <h4>19-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="118" data-rating="1">☆</span><span class="star empty" data-card="118" data-rating="2">☆</span><span class="star empty" data-card="118" data-rating="3">☆</span><span class="star empty" data-card="118" data-rating="4">☆</span><span class="star empty" data-card="118" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-118">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-119">
+        <h4>20-09-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 茉香奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="119" data-rating="1">☆</span><span class="star empty" data-card="119" data-rating="2">☆</span><span class="star empty" data-card="119" data-rating="3">☆</span><span class="star empty" data-card="119" data-rating="4">☆</span><span class="star empty" data-card="119" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-119">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-120">
+        <h4>23-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="120" data-rating="1">☆</span><span class="star empty" data-card="120" data-rating="2">☆</span><span class="star empty" data-card="120" data-rating="3">☆</span><span class="star empty" data-card="120" data-rating="4">☆</span><span class="star empty" data-card="120" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-120">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-121">
+        <h4>27-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="121" data-rating="1">☆</span><span class="star empty" data-card="121" data-rating="2">☆</span><span class="star empty" data-card="121" data-rating="3">☆</span><span class="star empty" data-card="121" data-rating="4">☆</span><span class="star empty" data-card="121" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-121">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-122">
+        <h4>29-09-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="122" data-rating="1">☆</span><span class="star empty" data-card="122" data-rating="2">☆</span><span class="star empty" data-card="122" data-rating="3">☆</span><span class="star empty" data-card="122" data-rating="4">☆</span><span class="star empty" data-card="122" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-122">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-10</h2>
+
+    <div class="card" id="card-134">
+        <h4>04-10-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 冰鲜柠檬水</p>
+        <p><b>评分:</b> <span class="star empty" data-card="134" data-rating="1">☆</span><span class="star empty" data-card="134" data-rating="2">☆</span><span class="star empty" data-card="134" data-rating="3">☆</span><span class="star empty" data-card="134" data-rating="4">☆</span><span class="star empty" data-card="134" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-134">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 七分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-135">
+        <h4>07-10-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 小黄油拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="135" data-rating="1">☆</span><span class="star empty" data-card="135" data-rating="2">☆</span><span class="star empty" data-card="135" data-rating="3">☆</span><span class="star empty" data-card="135" data-rating="4">☆</span><span class="star empty" data-card="135" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-135">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 微甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-136">
+        <h4>08-10-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="136" data-rating="1">☆</span><span class="star empty" data-card="136" data-rating="2">☆</span><span class="star empty" data-card="136" data-rating="3">☆</span><span class="star empty" data-card="136" data-rating="4">☆</span><span class="star empty" data-card="136" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-136">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-137">
+        <h4>09-10-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 茉莉奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="137" data-rating="1">☆</span><span class="star empty" data-card="137" data-rating="2">☆</span><span class="star empty" data-card="137" data-rating="3">☆</span><span class="star empty" data-card="137" data-rating="4">☆</span><span class="star empty" data-card="137" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-137">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-138">
+        <h4>12-10-2024</h4>
+        <p><b>品牌:</b> 永民手作</p>
+        <p><b>商品:</b> 铁观音珍珠奶茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="138" data-rating="1">☆</span><span class="star empty" data-card="138" data-rating="2">☆</span><span class="star empty" data-card="138" data-rating="3">☆</span><span class="star empty" data-card="138" data-rating="4">☆</span><span class="star empty" data-card="138" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-138">我的评分：0 星</div>
+        <p><b>评价:</b> 一般般，很淡</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-139">
+        <h4>17-10-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="139" data-rating="1">☆</span><span class="star empty" data-card="139" data-rating="2">☆</span><span class="star empty" data-card="139" data-rating="3">☆</span><span class="star empty" data-card="139" data-rating="4">☆</span><span class="star empty" data-card="139" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-139">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-140">
+        <h4>18-10-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 小黄油拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="140" data-rating="1">☆</span><span class="star empty" data-card="140" data-rating="2">☆</span><span class="star empty" data-card="140" data-rating="3">☆</span><span class="star empty" data-card="140" data-rating="4">☆</span><span class="star empty" data-card="140" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-140">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 微甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-141">
+        <h4>23-10-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 茉莉奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="141" data-rating="1">☆</span><span class="star empty" data-card="141" data-rating="2">☆</span><span class="star empty" data-card="141" data-rating="3">☆</span><span class="star empty" data-card="141" data-rating="4">☆</span><span class="star empty" data-card="141" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-141">我的评分：0 星</div>
+        <p><b>评价:</b> 茉莉茶味很浓，贵有贵的道理</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-142">
+        <h4>25-10-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="142" data-rating="1">☆</span><span class="star empty" data-card="142" data-rating="2">☆</span><span class="star empty" data-card="142" data-rating="3">☆</span><span class="star empty" data-card="142" data-rating="4">☆</span><span class="star empty" data-card="142" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-142">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-143">
+        <h4>26-10-2024</h4>
+        <p><b>品牌:</b> 蜜雪冰城</p>
+        <p><b>商品:</b> 茉莉奶绿</p>
+        <p><b>评分:</b> <span class="star empty" data-card="143" data-rating="1">☆</span><span class="star empty" data-card="143" data-rating="2">☆</span><span class="star empty" data-card="143" data-rating="3">☆</span><span class="star empty" data-card="143" data-rating="4">☆</span><span class="star empty" data-card="143" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-143">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-144">
+        <h4>31-10-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 抹茶奶布丁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="144" data-rating="1">☆</span><span class="star empty" data-card="144" data-rating="2">☆</span><span class="star empty" data-card="144" data-rating="3">☆</span><span class="star empty" data-card="144" data-rating="4">☆</span><span class="star empty" data-card="144" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-144">我的评分：0 星</div>
+        <p><b>评价:</b> 甜度刚刚好</p>
+        <p><b>含糖量:</b> 三分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-11</h2>
+
+    <div class="card" id="card-156">
+        <h4>06-11-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 紫气葡萄冻冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="156" data-rating="1">☆</span><span class="star empty" data-card="156" data-rating="2">☆</span><span class="star empty" data-card="156" data-rating="3">☆</span><span class="star empty" data-card="156" data-rating="4">☆</span><span class="star empty" data-card="156" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-156">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-157">
+        <h4>11-11-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 费尔岛拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="157" data-rating="1">☆</span><span class="star empty" data-card="157" data-rating="2">☆</span><span class="star empty" data-card="157" data-rating="3">☆</span><span class="star empty" data-card="157" data-rating="4">☆</span><span class="star empty" data-card="157" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-157">我的评分：0 星</div>
+        <p><b>评价:</b> 寡淡</p>
+        <p><b>含糖量:</b> 微甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-158">
+        <h4>15-11-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 南瓜燕麦拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="158" data-rating="1">☆</span><span class="star empty" data-card="158" data-rating="2">☆</span><span class="star empty" data-card="158" data-rating="3">☆</span><span class="star empty" data-card="158" data-rating="4">☆</span><span class="star empty" data-card="158" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-158">我的评分：0 星</div>
+        <p><b>评价:</b> 浓郁好喝</p>
+        <p><b>含糖量:</b> 少少甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-159">
+        <h4>16-11-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="159" data-rating="1">☆</span><span class="star empty" data-card="159" data-rating="2">☆</span><span class="star empty" data-card="159" data-rating="3">☆</span><span class="star empty" data-card="159" data-rating="4">☆</span><span class="star empty" data-card="159" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-159">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-160">
+        <h4>17-11-2024</h4>
+        <p><b>品牌:</b> 1点点</p>
+        <p><b>商品:</b> 粉条奶乌</p>
+        <p><b>评分:</b> <span class="star empty" data-card="160" data-rating="1">☆</span><span class="star empty" data-card="160" data-rating="2">☆</span><span class="star empty" data-card="160" data-rating="3">☆</span><span class="star empty" data-card="160" data-rating="4">☆</span><span class="star empty" data-card="160" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-160">我的评分：0 星</div>
+        <p><b>评价:</b> 一般般，粉条好吃，可以七分糖</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-161">
+        <h4>21-11-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="161" data-rating="1">☆</span><span class="star empty" data-card="161" data-rating="2">☆</span><span class="star empty" data-card="161" data-rating="3">☆</span><span class="star empty" data-card="161" data-rating="4">☆</span><span class="star empty" data-card="161" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-161">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-162">
+        <h4>24-11-2024</h4>
+        <p><b>品牌:</b> 霸王茶姬</p>
+        <p><b>商品:</b> 伯牙绝弦</p>
+        <p><b>评分:</b> <span class="star empty" data-card="162" data-rating="1">☆</span><span class="star empty" data-card="162" data-rating="2">☆</span><span class="star empty" data-card="162" data-rating="3">☆</span><span class="star empty" data-card="162" data-rating="4">☆</span><span class="star empty" data-card="162" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-162">我的评分：0 星</div>
+        <p><b>评价:</b> 标准冰、标准糖超级好喝</p>
+        <p><b>含糖量:</b> 标准糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-163">
+        <h4>27-11-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 紫气葡萄冻冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="163" data-rating="1">☆</span><span class="star empty" data-card="163" data-rating="2">☆</span><span class="star empty" data-card="163" data-rating="3">☆</span><span class="star empty" data-card="163" data-rating="4">☆</span><span class="star empty" data-card="163" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-163">我的评分：0 星</div>
+        <p><b>评价:</b> 五分糖刚刚好，七分要等冰融化才行，下次还是五分糖</p>
+        <p><b>含糖量:</b> 七分糖 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-164">
+        <h4>29-11-2024</h4>
+        <p><b>品牌:</b> 喜茶</p>
+        <p><b>商品:</b> 多肉葡萄</p>
+        <p><b>评分:</b> <span class="star empty" data-card="164" data-rating="1">☆</span><span class="star empty" data-card="164" data-rating="2">☆</span><span class="star empty" data-card="164" data-rating="3">☆</span><span class="star empty" data-card="164" data-rating="4">☆</span><span class="star empty" data-card="164" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-164">我的评分：0 星</div>
+        <p><b>评价:</b> 下次还喝的话可以再甜一点</p>
+        <p><b>含糖量:</b> 少甜 </p>
+        <p><b>温度:</b> 少冰 </p>
+    </div>
+    
+    <div class="card" id="card-165">
+        <h4>30-11-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 小黄油拿铁</p>
+        <p><b>评分:</b> <span class="star empty" data-card="165" data-rating="1">☆</span><span class="star empty" data-card="165" data-rating="2">☆</span><span class="star empty" data-card="165" data-rating="3">☆</span><span class="star empty" data-card="165" data-rating="4">☆</span><span class="star empty" data-card="165" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-165">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 微甜 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/><h2>2024-12</h2>
+
+    <div class="card" id="card-176">
+        <h4>13-12-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="176" data-rating="1">☆</span><span class="star empty" data-card="176" data-rating="2">☆</span><span class="star empty" data-card="176" data-rating="3">☆</span><span class="star empty" data-card="176" data-rating="4">☆</span><span class="star empty" data-card="176" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-176">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-177">
+        <h4>14-12-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 铁观音奶冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="177" data-rating="1">☆</span><span class="star empty" data-card="177" data-rating="2">☆</span><span class="star empty" data-card="177" data-rating="3">☆</span><span class="star empty" data-card="177" data-rating="4">☆</span><span class="star empty" data-card="177" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-177">我的评分：0 星</div>
+        <p><b>评价:</b> 回归咯，七分糖好喝</p>
+        <p><b>含糖量:</b> 七分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-178">
+        <h4>18-12-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 铁观音奶冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="178" data-rating="1">☆</span><span class="star empty" data-card="178" data-rating="2">☆</span><span class="star empty" data-card="178" data-rating="3">☆</span><span class="star empty" data-card="178" data-rating="4">☆</span><span class="star empty" data-card="178" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-178">我的评分：0 星</div>
+        <p><b>评价:</b> 下次试试五分糖</p>
+        <p><b>含糖量:</b> 七分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-179">
+        <h4>25-12-2024</h4>
+        <p><b>品牌:</b> 瑞幸咖啡</p>
+        <p><b>商品:</b> 葡萄柠檬茶</p>
+        <p><b>评分:</b> <span class="star empty" data-card="179" data-rating="1">☆</span><span class="star empty" data-card="179" data-rating="2">☆</span><span class="star empty" data-card="179" data-rating="3">☆</span><span class="star empty" data-card="179" data-rating="4">☆</span><span class="star empty" data-card="179" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-179">我的评分：0 星</div>
+        <p><b>评价:</b> 无</p>
+        <p><b>含糖量:</b> 不另外加糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    
+    <div class="card" id="card-180">
+        <h4>29-12-2024</h4>
+        <p><b>品牌:</b> 茶百道</p>
+        <p><b>商品:</b> 铁观音奶冻</p>
+        <p><b>评分:</b> <span class="star empty" data-card="180" data-rating="1">☆</span><span class="star empty" data-card="180" data-rating="2">☆</span><span class="star empty" data-card="180" data-rating="3">☆</span><span class="star empty" data-card="180" data-rating="4">☆</span><span class="star empty" data-card="180" data-rating="5">☆</span></p>
+        <div class="my-rating" id="my-rating-180">我的评分：0 星</div>
+        <p><b>评价:</b> 五分糖刚刚好，yyds</p>
+        <p><b>含糖量:</b> 五分糖 </p>
+        <p><b>温度:</b> 正常冰 </p>
+    </div>
+    <hr/>
+<script>
+// 生成加载动画星星粒子
+function createStars(num) {
+  const container = document.getElementById('stars-container');
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  for (let i = 0; i < num; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star-particle');
+    const size = Math.random() * 3 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.top = Math.random() * height + 'px';
+    star.style.left = Math.random() * width + 'px';
+    star.style.opacity = (0.3 + Math.random() * 0.7).toFixed(2);
+    star.style.animationDuration = (10 + Math.random() * 20) + 's';
+    star.style.animationName = 'moveStar';
+    container.appendChild(star);
+  }
+}
+
+// 星星缓慢横向漂移动画
+const styleSheet = document.createElement('style');
+styleSheet.type = 'text/css';
+styleSheet.innerText = `
+@keyframes moveStar {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(50px); }
+}
+`;
+document.head.appendChild(styleSheet);
+
+createStars(60);
+
+window.onload = function() {
+  setTimeout(() => {
+    // 淡出loading层
+    const loading = document.getElementById('loading-screen');
+    loading.style.transition = 'opacity 1s ease';
+    loading.style.opacity = '0';
+
+    // 显示主内容
+    const main = document.getElementById('main-content');
+    main.style.display = 'block';
+    setTimeout(() => {
+      main.style.opacity = '1';
+      loading.style.display = 'none';
+    }, 1000);
+  }, 2500);
+
+  createFallingStars(30);
+};
+
+// 星星评分点击逻辑
+document.addEventListener('DOMContentLoaded', function () {
+  const stars = document.querySelectorAll('.star');
+  stars.forEach(function(star) {
+    star.addEventListener('click', function() {
+      const rating = parseInt(this.dataset.rating);
+      const cardId = this.dataset.card;
+      const myRating = document.getElementById('my-rating-' + cardId);
+      myRating.innerText = `我的评分：${rating} 星`;
+
+      // 更新星星显示
+      const cardStars = document.querySelectorAll(`.star[data-card='${cardId}']`);
+      cardStars.forEach((s, i) => {
+        if (i < rating) {
+          s.classList.remove('empty');
+          s.innerText = '★';
+          s.style.color = '#FFD700';
+        } else {
+          s.classList.add('empty');
+          s.innerText = '☆';
+          s.style.color = '#ccc';
+        }
+      });
+    });
+  });
+});
+
+// 碎星星掉落效果
+function createFallingStars(num) {
+  const container = document.getElementById('falling-stars-container');
+  const width = window.innerWidth;
+
+  for(let i = 0; i < num; i++) {
+    const star = document.createElement('div');
+    star.classList.add('falling-star');
+    star.innerText = '★';
+    star.style.left = Math.random() * width + 'px';
+    star.style.fontSize = (12 + Math.random() * 12) + 'px';
+    star.style.animationDuration = (3 + Math.random() * 3) + 's';
+    star.style.animationDelay = (Math.random() * 5) + 's';
+    star.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+    container.appendChild(star);
+  }
+}
+</script>
+
+</div> <!-- end main-content -->
+</body>
+</html>
